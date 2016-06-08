@@ -1,0 +1,45 @@
+#ifndef DETECTIONMODEL_H
+#define DETECTIONMODEL_H
+
+#include <iostream>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/ml/ml.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+
+using namespace std;
+using namespace cv;
+using namespace cv::ml;
+
+enum ModelType {
+	IDS_SVM		=	1,
+	IDS_KMEANS	=	2,
+	IDS_KNN	=	3,
+	IDS_ANN = 4,
+	IDS_NBC = 5,
+	IDS_DT = 6,
+};
+
+class DetectionModel{
+friend class boost::serialization::access;
+public:
+	DetectionModel(void){};
+	virtual ~DetectionModel(void){};
+	void setFuncId(int funcId){this->funcId = funcId;};
+	int getFuncId() const {return funcId;};
+	void train(Mat const&, int, Mat const&);
+	double predict(Mat const&);
+	
+	template<class Archive>
+  void serialize(Archive & ar, const unsigned int version)
+  {
+  	ar & funcId;
+    //ar & trainer;
+  }
+private:
+	int funcId;
+	Ptr<void> trainer;
+};
+
+#endif

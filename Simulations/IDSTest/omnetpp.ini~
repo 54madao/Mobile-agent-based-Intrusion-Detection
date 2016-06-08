@@ -1,0 +1,111 @@
+[General]
+
+include ../Parameters/Castalia.ini
+
+sim-time-limit = 100000s
+
+#SN.physicalProcessName
+
+#SN.node[*].Communication.Radio
+#SN.node[*].Communication.Radio.RadioParametersFile = "../Parameters/Radio/CCTestRadio.txt"
+#SN.node[*].Communication.Radio.RadioParametersFile = "../Parameters/Radio/CC2420.txt"
+SN.node[*].Communication.Radio.RadioParametersFile = "../Parameters/Radio/BANRadio.txt"
+
+#This parameter specifies the amount of symbols required by the radio to perform RSSI calculation.
+#SN.node[*].Communication.Radio.symbolsForRSSI = 16
+
+#Note that only power levels that were declared in the radio parameter file can be used. Default value (empty string) will cause the highest (first) output power level to be used.
+#SN.node[*].Communication.Radio.TxOutputPower = "-10dBm"
+SN.node[*].Communication.Radio.TxOutputPower = "-15dBm"
+
+#SN.node[*].Communication.Radio.bufferSize = 1024
+SN.node[*].Communication.Radio.collisionModel = 0
+SN.node[*].Communication.Radio.maxPhyFrameSize = 524288
+#SN.node[*].Communication.Radio.phyFrameOverhead = 0
+SN.node[*].Communication.Radio.collectTraceInfo = true
+
+#SN.node[*].Communication.MAC.randomTxOffset = 0
+#SN.node[*].Communication.MAC.backoffType = 2
+#SN.node[*].Communication.MAC.macBufferSize = 1024
+#SN.node[*].Communication.MAC.macPacketOverhead = 0
+#SN.node[*].Communication.MAC.macMaxPacketSize = 256
+SN.node[*].Communication.MAC.collectTraceInfo = true
+
+#SN.node[*].Communication.Routing
+SN.node[*].Communication.RoutingProtocolName = "MultipathRingsRouting"
+#SN.node[*].Communication.Routing.netBufferSize = 512
+#SN.node[*].Communication.Routing.netDataFrameOverhead = 0
+SN.node[*].Communication.Routing.collectTraceInfo = true
+
+#SN.node[*].ApplicationName
+SN.node[*].ApplicationName = "IDSTest"
+SN.node[0].Application.isSink = true
+SN.node[*].Application.collectTraceInfo = true
+SN.node[*].Application.nextRecipient = "0"
+SN.node[*].Application.detectionType = 0
+SN.node[0].Application.nextPlace = "1"
+SN.node[1].Application.nextPlace = "2"
+SN.node[2].Application.nextPlace = "3"
+SN.node[3].Application.nextPlace = "4"
+SN.node[4].Application.nextPlace = "5"
+SN.node[5].Application.nextPlace = "0"
+
+#BAN
+#SN.wirelessChannel.pathLossMapFile = "../Parameters/WirelessChannel/BANmodels/pathLossMap.txt"
+#SN.wirelessChannel.temporalModelParametersFile = "../Parameters/WirelessChannel/BANmodels/TemporalModel.txt"
+
+#SN.wirelessChannel.xCellSize = 10
+#SN.wirelessChannel.yCellSize = 10
+#SN.wirelessChannel.collectTraceInfo = true
+
+sim-time-limit = 1000000s
+SN.field_x = 5
+SN.field_y = 5
+SN.numNodes = 5
+SN.deployment = "[0]->center;[1..5]->uniform"
+#SN.node[0].ResourceManager.initialEnergy = 1000000
+#SN.node[1..20].ResourceManager.initialEnergy = 18720
+
+[Config Ideal]
+SN.wirelessChannel.sigma = 0
+SN.wirelessChannel.bidirectionalSigma = 0
+SN.node[*].Communication.Radio.mode = "IDEAL"
+
+[Config TunableMAC]
+SN.node[*].Communication.MACProtocolName = "TunableMAC"
+#SN.node[*].Communication.MAC.dutyCycle = 1.0
+#A good time for a listening interval is between 5ms and 10ms for the radio of 250Kbps we usually use
+#SN.node[*].Commmunication.MAC.listenInterval
+#For each piece of data needed to be transmitted how many times do we try to transmit it
+#SN.node[*].Commmunication.MAC.numTX
+#Retransmission Interval
+#SN.node[*].Commmunication.MAC.reTxInterval
+
+[Config TMAC]
+SN.node[*].Communication.MACProtocolName = "TMAC"
+
+[Config SMAC]
+SN.node[*].Communication.MACProtocolName = "TMAC"
+SN.node[*].Communication.MAC.listenTimeout = 61
+SN.node[*].Communication.MAC.disableTAextension = true
+SN.node[*].Communication.MAC.conservativeTA = false
+SN.node[*].Communication.MAC.collisionResolution = 0
+
+[Config ZigBeeMAC]
+SN.node[*].Communication.MACProtocolName = "Mac802154"
+SN.node[0].Communication.MAC.isFFD = true
+SN.node[0].Communication.MAC.isPANCoordinator = true
+SN.node[*].Communication.MAC.phyDataRate = 1024
+SN.node[*].Communication.MAC.phyBitsPerSymbol = 2
+
+[Config BaselineMAC]
+SN.node[*].Communication.MACProtocolName = "BaselineBANMac"
+SN.node[*].Communication.MAC.phyDataRate = 1024
+SN.node[0].Communication.MAC.isHub = true
+SN.node[*].Communication.MAC.macBufferSize = 48
+
+[Config Manager]
+#SN.node[*].ResourceManager.sigmaCPUClockDrift = 0
+#SN.node[*].ResourceManager.periodicEnergyCalculationInterval = 1000000
+#SN.node[*].MobilityManagerName = "NoMobilityManager"
+#SN.node[*].SensorManager.collectTraceInfo = true

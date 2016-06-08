@@ -1,0 +1,54 @@
+#include "SensorAgent.h"
+#include <ostream>
+#include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/device/array.hpp>
+using namespace std;
+
+int main(){
+
+	SensorAgent *SA1 = new SensorAgent(0);
+	SA1->setCurPlace("2");
+
+	/*ostringstream os;  
+	boost::archive::binary_oarchive oa(os);  
+	oa << *SA1;
+	string content = os.str();
+	cout << content << endl;
+	cout << content.size() << endl;
+	
+	//const char *k = content.c_str();
+	string str;
+	char buf[content.size()];
+	memset(buf, 0, content.size());
+	memcpy(buf, &content, content.size());
+	memcpy(&str, buf, content.size());
+	
+	
+	SensorAgent SA2;
+	istringstream is(str);  
+  boost::archive::binary_iarchive ia(is);  
+  ia >> SA2;*/
+  
+  char buffer[4096];
+	boost::iostreams::basic_array_sink<char> si(buffer, 4096);  
+	boost::iostreams::stream< boost::iostreams::basic_array_sink<char> > sink(si);
+	boost::archive::binary_oarchive oa(sink);
+	oa << *SA1; 
+  //source.flush();
+  
+  char *c = new char[4096];
+  for(int i = 0; i < 4096; i++){
+  	c[i] = buffer[i];
+  }
+  
+  SensorAgent SA2;
+  boost::iostreams::basic_array_source<char> sr(c, 4096);  
+	boost::iostreams::stream< boost::iostreams::basic_array_source<char> > source(sr);
+	boost::archive::binary_iarchive ia(source);
+	ia >> SA2;
+  
+  SA2.getCurPlace();
+  
+  cout << SA2.getCurPlace() << endl;  
+  return 0;
+}

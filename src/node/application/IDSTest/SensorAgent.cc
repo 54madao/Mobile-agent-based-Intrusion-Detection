@@ -1,0 +1,9 @@
+#include "SensorAgent.h"
+#include <iostream>
+
+using namespace std;
+
+string SensorAgent::run(){
+	return getCurPlace();
+}
+
